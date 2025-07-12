@@ -1,40 +1,60 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
+import axios from "axios";
 import Card from "@/components/common/Card";
-import { CardProps } from "@/types";
 
-import "@/styles/globals.css";
+export default function Home() {
+  const [properties, setProperties] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-const mockData: CardProps[] = [
-  {
-    id: "1",
-    title: "Cozy Cottage",
-    description: "A beautiful cottage in the countryside.",
-    imageUrl: "/images/cottage.jpg",
-    onClick: () => alert("Viewing Cozy Cottage"),
-  },
-  {
-    id: "2",
-    title: "Modern Apartment",
-    description: "An apartment in the heart of the city.",
-    imageUrl: "/images/apartment.jpg",
-    onClick: () => alert("Viewing Modern Apartment"),
-  },
-];
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/listings/");
+        setProperties(response.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load listings.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export default function HomePage() {
+    fetchListings();
+  }, []);
+
   return (
     <>
       <Head>
-        <title>Property Listings</title>
+        <title>ALX Listing App</title>
       </Head>
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Available Properties</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockData.map((property) => (
-            <Card key={property.id} {...property} />
-          ))}
-        </div>
+
+      <main className="max-w-6xl mx-auto px-6 py-10">
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">
+          Available Properties
+        </h1>
+
+        {loading && <p className="text-gray-500">Loading listings...</p>}
+        {error && <p className="text-red-500">{error}</p>}
+
+        {!loading && !error && (
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {properties.map((property) => (
+              <Card
+                key={property.id}
+                id={property.id}
+                title={property.name}
+                description={property.description || "No description provided."}
+                imageUrl={property.image || "/fallback.jpg"}
+                onClick={() => {
+                  // You can navigate to /property/[id] here
+                  console.log("Clicked", property.id);
+                }}
+              />
+            ))}
+          </div>
+        )}
       </main>
     </>
   );
