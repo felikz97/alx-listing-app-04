@@ -378,3 +378,11 @@ export interface PropertyProps {
   image: string;
   discount?: string; // Optional property for discount percentage
 }
+
+export const UI_TEXT = {
+  card: {
+    bookNow: "Book Now",
+    pricePerNight: "per night",
+    rating: "Rating",
+  },
+};

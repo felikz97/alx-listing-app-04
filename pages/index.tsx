@@ -3,6 +3,8 @@ import Head from "next/head";
 import Card from "@/components/common/Card";
 import { CardProps } from "@/types";
 
+import "@/styles/globals.css";
+
 const mockData: CardProps[] = [
   {
     id: "1",

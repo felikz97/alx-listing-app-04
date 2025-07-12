@@ -14,22 +14,26 @@ export const Card: React.FC<CardProps> = ({
   return (
     <div
       key={id}
-      className="rounded-2xl overflow-hidden shadow-md border hover:shadow-lg transition-shadow duration-300"
+      className="group rounded-2xl overflow-hidden shadow-md border hover:shadow-xl transition-shadow duration-300 bg-white"
     >
+      {/* Image Section */}
       <div className="relative h-48 w-full">
         <Image
-          src={imageUrl}
+          src={imageUrl || "/fallback.jpg"} // fallback in case of empty src
           alt={title}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-t-2xl"
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
+
+      {/* Content Section */}
       <div className="p-4 space-y-2">
         <h3 className="text-lg font-semibold truncate">{title}</h3>
         <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
+
         <Button onClick={onClick} className="mt-2">
-          {UI_TEXT.viewDetails}
+          {UI_TEXT?.viewDetails || "View Details"}
         </Button>
       </div>
     </div>
